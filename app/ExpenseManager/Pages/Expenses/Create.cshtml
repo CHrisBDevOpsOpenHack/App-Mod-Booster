@@ -1,0 +1,90 @@
+@page
+@model ExpenseManager.Pages.Expenses.CreateModel
+@{
+    ViewData["Title"] = "Submit New Expense";
+}
+
+<div class="page-header">
+    <h1>Submit New Expense</h1>
+    <p class="subtitle">Fill in the details of your expense claim</p>
+</div>
+
+<div class="form-container">
+    <form method="post" class="expense-form">
+        @Html.AntiForgeryToken()
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="UserId">Employee</label>
+                <select id="UserId" name="UserId" class="form-control" required>
+                    <option value="">Select Employee</option>
+                    @foreach (var user in Model.Users)
+                    {
+                        <option value="@user.UserId">@user.UserName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="CategoryId">Category</label>
+                <select id="CategoryId" name="CategoryId" class="form-control" required>
+                    <option value="">Select Category</option>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <option value="@cat.CategoryId">@cat.CategoryName</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="AmountGBP">Amount (£)</label>
+                <div class="input-group">
+                    <span class="input-prefix">£</span>
+                    <input type="number" id="AmountGBP" name="AmountGBP" class="form-control" step="0.01" min="0.01" required placeholder="0.00" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ExpenseDate">Expense Date</label>
+                <input type="date" id="ExpenseDate" name="ExpenseDate" class="form-control" required value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="Description">Description</label>
+            <textarea id="Description" name="Description" class="form-control" rows="3" placeholder="Brief description of the expense..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="ReceiptFile">Receipt Reference</label>
+            <input type="text" id="ReceiptFile" name="ReceiptFile" class="form-control" placeholder="/receipts/your-receipt.jpg" />
+        </div>
+
+        <div class="form-group">
+            <label for="StatusId">Status</label>
+            <select id="StatusId" name="StatusId" class="form-control">
+                @foreach (var status in Model.Statuses)
+                {
+                    if (status.StatusName == "Draft")
+                    {
+                        <option value="@status.StatusId" selected>@status.StatusName</option>
+                    }
+                    else
+                    {
+                        <option value="@status.StatusId">@status.StatusName</option>
+                    }
+                }
+            </select>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-error">@Model.ErrorMessage</div>
+        }
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit Expense</button>
+            <a href="/Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

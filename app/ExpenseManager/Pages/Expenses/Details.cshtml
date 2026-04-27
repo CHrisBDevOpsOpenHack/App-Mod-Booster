@@ -1,0 +1,96 @@
+@page
+@model ExpenseManager.Pages.Expenses.DetailsModel
+@{
+    ViewData["Title"] = "Expense Details";
+}
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="error-banner">
+        <div class="error-banner-content">
+            <span class="error-icon">⚠️</span>
+            <span class="error-text">@Model.ErrorMessage</span>
+        </div>
+    </div>
+}
+
+<div class="page-header">
+    <h1>Expense #@Model.Expense?.ExpenseId</h1>
+    <a href="/Index" class="btn btn-secondary">← Back to List</a>
+</div>
+
+@if (Model.Expense != null)
+{
+    <div class="detail-card">
+        <div class="detail-header">
+            <div class="detail-status">
+                <span class="status-badge status-@Model.Expense.StatusName.ToLower() status-large">@Model.Expense.StatusName</span>
+            </div>
+            <div class="detail-amount">£@Model.Expense.AmountGBP.ToString("N2")</div>
+        </div>
+
+        <div class="detail-grid">
+            <div class="detail-item">
+                <label>Employee</label>
+                <span>@Model.Expense.UserName</span>
+            </div>
+            <div class="detail-item">
+                <label>Category</label>
+                <span class="category-badge">@Model.Expense.CategoryName</span>
+            </div>
+            <div class="detail-item">
+                <label>Expense Date</label>
+                <span>@Model.Expense.ExpenseDate.ToString("dd MMMM yyyy")</span>
+            </div>
+            <div class="detail-item">
+                <label>Currency</label>
+                <span>@Model.Expense.Currency</span>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.Expense.Description))
+            {
+                <div class="detail-item detail-full">
+                    <label>Description</label>
+                    <span>@Model.Expense.Description</span>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Expense.ReceiptFile))
+            {
+                <div class="detail-item detail-full">
+                    <label>Receipt</label>
+                    <span>@Model.Expense.ReceiptFile</span>
+                </div>
+            }
+            @if (Model.Expense.SubmittedAt.HasValue)
+            {
+                <div class="detail-item">
+                    <label>Submitted At</label>
+                    <span>@Model.Expense.SubmittedAt.Value.ToString("dd MMM yyyy HH:mm")</span>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Expense.ReviewedByName))
+            {
+                <div class="detail-item">
+                    <label>Reviewed By</label>
+                    <span>@Model.Expense.ReviewedByName</span>
+                </div>
+                <div class="detail-item">
+                    <label>Reviewed At</label>
+                    <span>@Model.Expense.ReviewedAt?.ToString("dd MMM yyyy HH:mm")</span>
+                </div>
+            }
+            <div class="detail-item">
+                <label>Created At</label>
+                <span>@Model.Expense.CreatedAt.ToString("dd MMM yyyy HH:mm")</span>
+            </div>
+        </div>
+
+        <div class="detail-actions">
+            <a href="/Expenses/Edit?id=@Model.Expense.ExpenseId" class="btn btn-primary">Edit</a>
+            @if (Model.Expense.StatusName == "Submitted")
+            {
+                <a href="/Expenses/Approve?id=@Model.Expense.ExpenseId" class="btn btn-approve">✅ Approve</a>
+                <a href="/Expenses/Reject?id=@Model.Expense.ExpenseId" class="btn btn-reject">❌ Reject</a>
+            }
+        </div>
+    </div>
+}

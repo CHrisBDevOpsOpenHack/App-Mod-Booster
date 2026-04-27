@@ -1,0 +1,13 @@
+-- script.sql
+-- Grants managed identity access to the Northwind database
+-- MANAGED-IDENTITY-NAME will be replaced by the deployment script
+
+IF EXISTS (SELECT * FROM sys.database_principals WHERE name = 'MANAGED-IDENTITY-NAME')
+BEGIN
+    DROP USER [MANAGED-IDENTITY-NAME];
+END
+
+CREATE USER [MANAGED-IDENTITY-NAME] FROM EXTERNAL PROVIDER;
+ALTER ROLE db_datareader ADD MEMBER [MANAGED-IDENTITY-NAME];
+ALTER ROLE db_datawriter ADD MEMBER [MANAGED-IDENTITY-NAME];
+GRANT EXECUTE TO [MANAGED-IDENTITY-NAME];

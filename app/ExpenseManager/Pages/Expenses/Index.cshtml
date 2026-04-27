@@ -1,0 +1,106 @@
+@page
+@model ExpenseManager.Pages.Expenses.ExpensesListModel
+@{
+    ViewData["Title"] = "All Expenses";
+}
+
+<div class="page-header">
+    <h1>All Expenses</h1>
+    <a href="/Expenses/Create" class="btn btn-primary">＋ New Expense</a>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="error-banner">
+        <div class="error-banner-content">
+            <span class="error-icon">⚠️</span>
+            <span class="error-text">@Model.ErrorMessage</span>
+        </div>
+    </div>
+}
+
+<div class="filter-bar">
+    <form method="get">
+        <label>Filter by Status:</label>
+        <select name="statusFilter" class="filter-select" onchange="this.form.submit()">
+            <option value="">All</option>
+            @foreach (var status in Model.Statuses)
+            {
+                if (Model.StatusFilter == status.StatusId)
+                {
+                    <option value="@status.StatusId" selected>@status.StatusName</option>
+                }
+                else
+                {
+                    <option value="@status.StatusId">@status.StatusName</option>
+                }
+            }
+        </select>
+        <label>Category:</label>
+        <select name="categoryFilter" class="filter-select" onchange="this.form.submit()">
+            <option value="">All</option>
+            @foreach (var cat in Model.Categories)
+            {
+                if (Model.CategoryFilter == cat.CategoryId)
+                {
+                    <option value="@cat.CategoryId" selected>@cat.CategoryName</option>
+                }
+                else
+                {
+                    <option value="@cat.CategoryId">@cat.CategoryName</option>
+                }
+            }
+        </select>
+    </form>
+</div>
+
+<div class="table-container">
+    <table class="expense-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model.Expenses)
+            {
+                <tr>
+                    <td>@e.ExpenseId</td>
+                    <td>@e.UserName</td>
+                    <td><span class="category-badge">@e.CategoryName</span></td>
+                    <td>@e.ExpenseDate.ToString("dd MMM yyyy")</td>
+                    <td>@e.Description</td>
+                    <td>£@e.AmountGBP.ToString("N2")</td>
+                    <td><span class="status-badge status-@e.StatusName.ToLower()">@e.StatusName</span></td>
+                    <td>
+                        <a href="/Expenses/Details?id=@e.ExpenseId" class="btn-icon" title="View">👁</a>
+                        <a href="/Expenses/Edit?id=@e.ExpenseId" class="btn-icon" title="Edit">✏️</a>
+                        @if (e.StatusName == "Submitted")
+                        {
+                            <a href="/Expenses/Approve?id=@e.ExpenseId" class="btn-icon btn-approve" title="Approve">✅</a>
+                            <a href="/Expenses/Reject?id=@e.ExpenseId" class="btn-icon btn-reject" title="Reject">❌</a>
+                        }
+                        <button onclick="deleteExpense(@e.ExpenseId)" class="btn-icon btn-delete" title="Delete">🗑️</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        async function deleteExpense(id) {
+            if (!confirm('Delete this expense?')) return;
+            const r = await fetch(`/api/expenses/${id}`, { method: 'DELETE' });
+            if ((await r.json()).success) location.reload();
+        }
+    </script>
+}

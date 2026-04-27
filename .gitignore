@@ -1,0 +1,40 @@
+# .gitignore for Expense Manager
+
+# Build artifacts
+app/ExpenseManager/bin/
+app/ExpenseManager/obj/
+app/ExpenseManager/publish/
+
+# .NET build files
+*.user
+*.suo
+.vs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+venv/
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+*.swp
+*.swo
+
+# Secrets (never commit these)
+*.pfx
+local.settings.json
+secrets.json
+
+# Note: app.zip IS tracked in git for deployment
+# Do NOT add *.zip to this file
