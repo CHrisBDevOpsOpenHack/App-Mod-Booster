@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Expense Manager</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="nav-brand" href="/Index">
+                <span class="nav-icon">💼</span>
+                <span>Expense Manager</span>
+            </a>
+            <div class="nav-links">
+                <a href="/Index" class="nav-link">Dashboard</a>
+                <a href="/Expenses" class="nav-link">Expenses</a>
+                <a href="/Expenses/Create" class="nav-link">Submit</a>
+                <a href="/swagger" class="nav-link" target="_blank">API Docs</a>
+                <a href="/chatui" class="nav-link nav-link-ai">💬 AI Assistant</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Expense Manager &copy; @DateTime.Now.Year | Built on Azure | <a href="/swagger">API Documentation</a></p>
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
